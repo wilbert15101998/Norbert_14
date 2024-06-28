@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- <template id="novert_invoice" inherit_id="account.report_invoice_document">
+         <xpath expr="//div[@class='page']/[@id='qrcode']" position="after">
+             <div id="novert_custom_info">
+               &lt;!&ndash;  <span id="total_qty">
+                     <span>Total Quantity:&lt;!&ndash;<t t-esc="o.amount_res idual"/>&ndash;&gt;
+                 </span>
+                 </span>
+               <br/>
+                 <span> No.of Boxes:________</span> <br/>
+                 <span>All unpaid goods remain the property of Nobert Wholesale and Distribution</span> <br/>
+                 <span>Paid Amount: __________________</span>  <span>Recived by (Name,Signatur &amp;Date):_____________</span>
+                 <span> Goods received by (Name,Signature &amp;Date):________________</span>&ndash;&gt;
+             </div>
+         </xpath>
+     </template>`
+-->
+
+    <template id="novert_invoice_custom" inherit_id="account.report_invoice_document">
+        <xpath expr="//div[@id='qrcode']" position="after">
+            <div id="novert_custom_info">
+                <t t-set="total_qty" t-value="0"/>
+                <t t-foreach="lines" t-as="line">
+                    <t t-set="total_qty" t-value="total_qty+line.quantity"/>
+                </t>
+                <span id="total_qty">
+                    <span>Total Quantity:
+                        <t t-esc="total_qty"/>
+                    </span>
+                </span>
+                <br/>
+                <br/>
+                <span>No.of Boxes:_____________</span>
+                <br/>
+                <br/>
+                <span>All unpaid goods remain the property of Nobert Wholesale and Distribution</span>
+                <br/>
+                <br/>
+                <span>Paid Amount: ____________________</span>
+                <span>Recived by (Name,Signatur &amp;Date):___________________________________________________________
+                </span>
+                <br/>
+                <br/>
+                <span>Goods received by (Name,Signature &amp;Date):_____________________________________________________________________________________</span>
+            </div>
+        </xpath>
+        <xpath expr="//div[@class='page']" position="before">
+            <div class="header">
+                <div class="o_boxed_header">company_id
+                    <div class="row mb8">
+                        <div class="col-6">
+                            <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" alt="Logo"/>
+                        </div>
+                        <div class="col-6 text-right mb4">
+                            <h4 class="mt0" t-field="o.company_id.report_header"/>
+                            <div name="company_address" class="float-right mb4">
+                                <span class="company_address" t-field="o.company_id.partner_id"
+                                      t-options='{"widget": "contact", "fields": ["address", "name","phone"], "no_marker": true}'/>
+
+                            </div>
+                             <span><t t-esc="o.company_id.phone"/></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+
+        <xpath expr="//div[@class='page']" position="after">
+            <div class="footer">
+                <div class="text-center">
+                    <ul class="list-inline">
+                        <!--<li t-if="o.company_id.phone" class="list-inline-item">
+                            <span class="o_force_ltr" t-field="o.company_id.phone"/>
+                        </li>
+                        <li t-if="o.company_id.email" class="list-inline-item">
+                            <span t-field="o.company_id.email"/>
+                        </li>
+                        <li t-if="o.company_id.website" class="list-inline-item">
+                            <span t-field="o.company_id.website"/>
+                        </li>
+                        <li t-if="o.company_id.vat" class="list-inline-item"><t
+                                t-esc="o.company_id.country_id.vat_label or 'Tax ID'"/>:
+                            <span t-field="o.company_id.vat"/>
+                        </li>-->
+                    </ul>
+                    <!-- <div t-field="company.report_footer"/>-->
+                    <div t-if="report_type == 'pdf'">
+                        <div class="text-center">Page:
+                        <span class="page"/>
+                        /
+                        <span class="topage"/> - 
+                            <t t-esc="o.name"/> - 
+							<t t-esc="o.company_id.country_id.vat_label or 'Tax ID'"/>:
+                            <span t-field="o.company_id.vat"/>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </xpath>
+    </template>
+</odoo>
